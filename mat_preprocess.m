@@ -32,8 +32,8 @@ function [] = mat_preprocess(filename, output_folder, subjectid)
     [x, y, z, cardic_ph,res_ph] = size(Freq);
     voxelSize = [params.dReadoutFOV_mm./x, params.dPhaseFOV_mm./y, params.dThickness_mm./z];
 
-    for i = cardic_ph
-        for j = res_ph
+    for i = 1:cardic_ph
+        for j = 1:res_ph
             mask = Mask(:,:,:,i,j);
             freq = Freq(:,:,:,i,j);
             mag = Mag(:,:,:,i,j);
