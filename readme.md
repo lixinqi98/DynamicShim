@@ -1,6 +1,8 @@
 # Dynamic Shim Pipeline
 
 ## Matlab
++ `main_preprocess.m`: Load the data and prepare the 3D volumes for segmentation.
++ `main_shim.m`: Load the B0field and Bz field.
 + `mat_preprocess.m`: save every single 3D volume in `.mat` file as a Nifti file.
 
 
@@ -9,7 +11,7 @@ This implementation is based on this paper:
 > Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.
 
 ### Install
-1. Install necessary packages
+1. Turn on the `WSL` command line tool. Install necessary packages
     ```bash
     cd /mnt/c/Users/MRI/Desktop/Mona/DynamicShim/py
     conda create --name shim python=3.8
@@ -19,9 +21,9 @@ This implementation is based on this paper:
 2. Set the default path
     ```bash
     cd ../
-    conda env config vars set nnUNet_raw_data_base="data/nnUNet_raw_data_base"
-    conda env config vars set nnUNet_preprocessed="data/nnUNet_preprocessed"
-    conda env config vars set RESULTS_FOLDER="data/nnUNet_trained_models"
+    conda env config vars set nnUNet_raw_data_base="data\nnUNet_raw_data_base"
+    conda env config vars set nnUNet_preprocessed="data\nnUNet_preprocessed"
+    conda env config vars set RESULTS_FOLDER="data\nnUNet_trained_models"
 
     conda deactivate
     conda activate shim
@@ -29,6 +31,7 @@ This implementation is based on this paper:
     
 
 ### Inference
+Run the `./segmentation.sh ` directly or follow the steps:
 1. Create the dual modalities test datasets (magnitute`_0000.nii.gz` and phase`_0001.nii.gz`) using the `scripts/preprocess_2modalities.py` script. The `--resolution` and `--direction` arguments are necessary or use the default values `(3.57, 3.57, 5.78)` and `(-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0)` respectively.
     ```bash
     python scripts/preprocess_2modalities.py --mags <path/to/magnitute> --phases <path/to/phase> --masks <path/to/mask> --out <path/to/2mods_output> --resolution res --direction dir
