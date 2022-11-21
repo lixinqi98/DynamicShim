@@ -16,9 +16,9 @@ from skimage import exposure
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_dir', type=str, default='data/MRI', help='input dir')
-    parser.add_argument('--output_dir', type=str, default='data/MRI_resampled', help='output dir')
-    parser.add_argument('--resolution', default=(3.57, 3.57, 5.78), help='spacing, 3D tuple, for example (1, 1, 1)')
+    parser.add_argument('--input_dir', type=str, default='data/label_pred', help='input dir')
+    parser.add_argument('--output_dir', type=str, default='data/label_pred_resampled', help='output dir')
+    parser.add_argument('--resolution', default=None, help='spacing, 3D tuple, for example (1, 1, 1)')
     parser.add_argument('--interpolator', type=str, default='bspline', help='interpolator, bspline or nearest(usually for mask)')
     # parser.add_argument('--crop', default=(85, 85), help='whether the image need to be cropped')
     args = parser.parse_args()
@@ -34,10 +34,10 @@ if __name__ == "__main__":
         resolution = template.GetSpacing()
         direction = template.GetDirection()
     else:
-        resolution = args.resolution
+        resolution = (3.57, 3.57, 5.78)
         direction = (-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0)
     print(f"resolution is {resolution} and direction is {direction}")
-    
+
     for file in files:
         image_name = (file.split("/")[-1]).split(".")[0]
 
