@@ -6,9 +6,9 @@
 function [coilcurrent] = dynamicshim(order, DC_limit, root)
     warning('off','all')
 
-    freq_folder = fullfile(root, 'freq_resample');
+    freq_folder = fullfile(root, 'freq');
     mask_folder = fullfile(root, 'label_pred_resample');
-    Bz_folder = fullfile(root, 'Bz_resample');
+    Bz_folder = fullfile(root, 'Bz');
     freq_files = dir(fullfile(freq_folder, '*.nii'));
     mask_files = dir(fullfile(mask_folder, '*.nii'));
     Bz_files = dir(fullfile(Bz_folder, '*.mat'));

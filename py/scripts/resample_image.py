@@ -33,10 +33,14 @@ if __name__ == "__main__":
         template = sitk.ReadImage(tmpfiles[0])
         resolution = template.GetSpacing()
         direction = template.GetDirection()
+        new_size = template.GetSize()
+
     else:
         resolution = (3.57, 3.57, 5.78)
         direction = (-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0)
-    print(f"resolution is {resolution} and direction is {direction}")
+
+        new_size = (192, 192, 40)
+    print(f"resolution is {resolution} and direction is {direction} and dimension {new_size}")
 
     for file in files:
         image_name = (file.split("/")[-1]).split(".")[0]
@@ -45,7 +49,7 @@ if __name__ == "__main__":
         if args.interpolator == 'bspline' and "Cardiac" not in image_name:
             img = sitk.PermuteAxes(img, (1, 0, 2))
         img = resample_sitk_image(img, spacing=resolution, interpolator=args.interpolator, fill_value=0)
-        
+        img = resize(img, new_size, sitk.sitkNearestNeighbor)
         img = setProperty(img, resolution, direction)
               
         sitk.WriteImage(img, os.path.join(args.output_dir, image_name+'.nii'))
