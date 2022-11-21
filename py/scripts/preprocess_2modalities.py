@@ -25,7 +25,8 @@ if __name__ == "__main__":
     assert len(list_mag) == len(list_phase) == len(list_mask), 'Number of files in each directory must be the same'
 
     for i in range(len(list_mag)):
-        image_name = ((list_mag[i]).split("/")[-1]).split(".")[0]
+        image_name = os.path.split(list_mag[i])[1]
+        image_name = image_name.split(".")[0]
 
         mag = sitk.ReadImage(list_mag[i])
         mag = sitk.PermuteAxes(mag, (1, 0, 2))

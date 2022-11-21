@@ -34,7 +34,7 @@ mags = fullfile(resultpath, 'mag');
 phases = fullfile(resultpath, 'freq');
 masks = fullfile(resultpath, 'mask');
 out = fullfile(resultpath, '2modalities');
-cmd = sprintf('python %s --mags %s --phases %s --masks %s --out %s', file, mags, phases, masks, out);
+cmd = sprintf('%s --mags %s --phases %s --masks %s --out %s', file, mags, phases, masks, out);
 pyrunfile(file, cmd)
 
 

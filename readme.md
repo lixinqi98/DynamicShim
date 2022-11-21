@@ -11,13 +11,20 @@ This implementation is based on this paper:
 ### Install
 1. Install necessary packages
     ```bash
+    cd /mnt/c/Users/MRI/Desktop/Mona/DynamicShim/py
+    conda create --name shim python=3.8
+    conda activate shim
     pip install -e .
     ```
 2. Set the default path
     ```bash
-    export nnUNet_raw_data_base="path/nnUNet_raw_data_base"
-    export nnUNet_preprocessed="path/nnUNet_preprocessed"
-    export RESULTS_FOLDER="path/nnUNet_trained_models"
+    cd ../
+    conda env config vars set nnUNet_raw_data_base="data/nnUNet_raw_data_base"
+    conda env config vars set nnUNet_preprocessed="data/nnUNet_preprocessed"
+    conda env config vars set RESULTS_FOLDER="data/nnUNet_trained_models"
+
+    conda deactivate
+    conda activate shim
     ```
     
 
