@@ -22,6 +22,3 @@ end
 %% STEP 2 - Calculate the shim current
 order = 2;
 DC_limit = 10;
-
-coilDC = dynamicshim(order, DC_limit, rootpath);
-save(fullfile(resultpath, 'coilDC.mat'), coilDC);
