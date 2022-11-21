@@ -1,8 +1,8 @@
-function [] = mat_preprocess(filename, output_folder, subjectid)
+function [] = B0Bzpreprocess(B0path, Bzpath, output_folder, subjectid)
 % preprocess the .mat file. Save single 3d Volume to Nifti files.
 % 
 % Parameters
-%   filename: .mat file including 5-D frequency map(Freq), magnitude map(Mag), automask(Mask) and
+%   B0path: B0 .mat file including 5-D frequency map(Freq), magnitude map(Mag), automask(Mask) and
 %             parameters. The 5-D matrix's shape is [H, W, slices, cardiac, respiratory]. 
 %   output_folder: folder to save the nifti files. Frequency map, magnitude map and mask will be 
 %                  saved in ${output_folder}/freq, ${output_folder}/mag and ${output_folder}/mask.
@@ -13,6 +13,7 @@ function [] = mat_preprocess(filename, output_folder, subjectid)
 %     check if parameters exist
     try
         load(filename, 'Freq', 'params', 'Mag', 'Mask')
+        load(filename, '
     catch 
         error('Variables (Freq / Mag / Mask / params) do not exist');
     end
@@ -26,6 +27,9 @@ function [] = mat_preprocess(filename, output_folder, subjectid)
     end
     if ~exist(fullfile(output_folder, 'mask'), 'dir')
         mkdir(fullfile(output_folder, 'mask'))
+    end
+    if ~exist(fullfile(output_folder, 'Bz'), 'dir')
+        mkdir(fullfile(output_folder, 'Bz'))
     end
 
 %     create nifti files

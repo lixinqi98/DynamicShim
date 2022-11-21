@@ -28,10 +28,16 @@ if __name__ == "__main__":
     files = files_nii + files_nii_gz
 
     os.makedirs(args.output_dir, exist_ok=True)
-
-    resolution = args.resolution
-    direction = (-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0)
-
+    if args.resolution == None:
+        tmpfiles = glob.glob("data/freq/*.nii")
+        template = sitk.ReadImage(tmpfiles[0])
+        resolution = template.GetSpacing()
+        direction = template.GetDirection()
+    else:
+        resolution = args.resolution
+        direction = (-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0)
+    print(f"resolution is {resolution} and direction is {direction}")
+    
     for file in files:
         image_name = (file.split("/")[-1]).split(".")[0]
 

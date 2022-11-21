@@ -11,7 +11,7 @@ function [coilcurrent] = dynamicshim(order, DC_limit, root)
     Bz_folder = fullfile(root, 'Bz_resample');
     freq_files = dir(fullfile(freq_folder, '*.nii'));
     mask_files = dir(fullfile(mask_folder, '*.nii'));
-    Bz_files = dir(fullfile(Bz_folder, '*.mat'));
+    Bz_files = dir(fullfile(Bz_folder, '*.nii'));
 
     [~,ind]=sort({freq_files.name});
     freq_files = freq_files(ind);
@@ -30,20 +30,19 @@ function [coilcurrent] = dynamicshim(order, DC_limit, root)
         freq = niftiread(fullfile(freq_files(i).folder, freq_files(i).name));
         seg = niftiread(fullfile(mask_files(i).folder, mask_files(i).name));
         
-%         Load the Bz map
-        bz = load(fullfile(Bz_files(i).folder, Bz_files(i).name));
-        Bz_mapped = bz.Bz_mapped;
+        seg = niftiread(fullfile(mask_files(i).folder, mask_files(i).name));
+  
     %     generate the corresponding Bz map
-%         [n1,n2,n3] = size(freq);
-%         [y,x,z] = meshgrid(1:1:n2,1:1:n1,1:1:n3);
-%         [B_collect, S_collect, ~] = SH_order_20210527(order,x,y,z); 
-%         N_coils = length(B_collect);
-%         % Create 4-D array of Bz field including the (x,y,z,# of coil)
-%         Bz_mapped = zeros([size(x,1) size(x,2) size(x,3) N_coils]); % preallocation
-%         for jr = 1:N_coils
-%             temp = cell2mat(B_collect(jr));
-%             Bz_mapped(:,:,:,jr) = temp .* S_collect(jr);
-%         end
+        [n1,n2,n3] = size(freq);
+        [y,x,z] = meshgrid(1:1:n2,1:1:n1,1:1:n3);
+        [B_collect, S_collect, ~] = SH_order_20210527(order,x,y,z); 
+        N_coils = length(B_collect);
+        % Create 4-D array of Bz field including the (x,y,z,# of coil)
+        Bz_mapped = zeros([size(x,1) size(x,2) size(x,3) N_coils]); % preallocation
+        for jr = 1:N_coils
+            temp = cell2mat(B_collect(jr));
+            Bz_mapped(:,:,:,jr) = temp .* S_collect(jr);
+        end
         for jr=1:size(Bz_mapped,4)
             Bz_ROI = Bz_mapped(:,:,:,jr);
             Bzf_temp(:,jr) = Bz_ROI(:);

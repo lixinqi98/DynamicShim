@@ -1,6 +1,8 @@
-% main.m
+% main_shim.m
 % Dynamic shimming pipeline for one subject.
-
+% B0path: path to the B0 mat
+% Bzpath: path to the Bz mat
+% resultpath: path to the result folder
 % Created. Mov 16 2022
 
 addpath(genpath('tools'))
@@ -8,20 +10,15 @@ addpath(genpath('tools'))
 addpath('tool');
 fask_impl = 0;
 if (fask_impl)
-    datapath = uigetdir('.mat','Select the Input Data');
-    resultpath = uigetdir('','Select the Output Folder');
-    if (isequal(datapath,0)||isequal(resultpath,0))
+    rootpath = uigetdir('','Select the Output Folder');
+    if (isequal(resultpath,0))
         error('User selected Cancel');
     end
 else
-    datapath = 'data/raw_mat/FID14095.mat';
-    resultpath = 'data';
+    rootpath = 'data';
 end
 
 % 
 %% STEP 2 - Calculate the shim current
 order = 2;
 DC_limit = 10;
-
-coilDC = dynamicshim(order, DC_limit, resultpath);
-save(fullfile(resultpath, 'coilDC.mat'), coilDC);
