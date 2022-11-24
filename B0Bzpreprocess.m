@@ -1,9 +1,10 @@
-function [] = B0Bzpreprocess(B0path, Bzpath, output_folder, subjectid)
+function [] = B0Bzpreprocess(B0, Bz, output_folder, subjectid)
 % preprocess the .mat file. Save single 3d Volume to Nifti files.
 % 
 % Parameters
-%   B0path: B0 .mat file including 5-D frequency map(Freq), magnitude map(Mag), automask(Mask) and
-%             parameters. The 5-D matrix's shape is [H, W, slices, cardiac, respiratory]. 
+%   B0: B0 structure including 3-D frequency map(Freq), magnitude map(Mag), automask(Mask) and
+%             parameters. The 3-D matrix's shape is [H, W, slices]. 
+%   Bz: Bz 3-D Bzmap. The 3-D matrix's shape is [H, W, slices]. 
 %   output_folder: folder to save the nifti files. Frequency map, magnitude map and mask will be 
 %                  saved in ${output_folder}/freq, ${output_folder}/mag and ${output_folder}/mask.
 %   subjectid: e.g., 'FID17073'
@@ -11,11 +12,20 @@ function [] = B0Bzpreprocess(B0path, Bzpath, output_folder, subjectid)
     addpath(genpath("tools"))
 
 %     check if parameters exist
-    try
-        load(B0path, 'Freq', 'params', 'Mag', 'Mask')
-        load(Bzpath, 'Bz')
-    catch 
-        error('Variables (Freq / Mag / Mask / params) do not exist');
+    if ~isfield(B0,'phasemap')
+        error('Frequency map does not exist in B0map')
+    else
+        Freq = B0.phasemap;
+    end
+    if ~isfield(B0,'mag')
+        error('Magnitude map does not exist in B0map')
+    else
+        Mag = B0.mag;
+    end
+    if ~isfield(B0.Parameters,'Mask')
+        error('Mask map does not exist in B0map')
+    else
+        Mask = B0.Parameters.Mask;
     end
 
 %     check if output folders exist
@@ -33,30 +43,25 @@ function [] = B0Bzpreprocess(B0path, Bzpath, output_folder, subjectid)
     end
 
 %     create nifti files
-    [x, y, z, cardic_ph,res_ph] = size(Freq);
-    voxelSize = [params.dReadoutFOV_mm./x, params.dPhaseFOV_mm./y, params.dThickness_mm./z];
+    voxelSize = B0.Parameters.Voxelsize;
 
-    for i = [1,cardic_ph]
-        for j = [1,res_ph]
-            mask = Mask(:,:,:,i,j);
-            freq = Freq(:,:,:,i,j);
-            mag = Mag(:,:,:,i,j);
-            Bz_mapped  = Bz(:,:,:,i,j);
-            mag_clean = mag .* mask;
-            freq_clean = freq .* mask;
-            
-            mag_path = fullfile(output_folder, 'mag', [subjectid, '_', int2str(i), '_', int2str(j), '.nii']);
-            freq_path = fullfile(output_folder, 'freq', [subjectid, '_', int2str(i), '_', int2str(j), '.nii']);
-            mask_path = fullfile(output_folder, 'mask', [subjectid, '_', int2str(i), '_', int2str(j), '.nii']);
-            bz_path = fullfile(output_folder, 'Bz', [subjectid, '_', int2str(i), '_', int2str(j), '.nii']);
-            
-            mat2Nifti(freq_clean, freq_path, voxelSize);
-            mat2Nifti(mag_clean, mag_path, voxelSize);
-            mat2Nifti(mask, mask_path, voxelSize);
-            save(bz_path, 'Bz_mapped');
-            
-        end
-    end
+    mask = double(Mask);
+    freq = double(Freq);
+    mag = double(Mag);
+    Bz_mapped  = double(Bz);
+    mag_clean = mag .* mask;
+    freq_clean = freq .* mask;
+    
+    mag_path = fullfile(output_folder, 'mag', [subjectid, '.nii']);
+    freq_path = fullfile(output_folder, 'freq', [subjectid, '.nii']);
+    mask_path = fullfile(output_folder, 'mask', [subjectid, '.nii']);
+    bz_path = fullfile(output_folder, 'Bz', [subjectid, '.nii']);
+    
+    mat2Nifti(freq_clean, freq_path, voxelSize);
+    mat2Nifti(mag_clean, mag_path, voxelSize);
+    mat2Nifti(mask, mask_path, voxelSize);
+    save(bz_path, 'Bz_mapped');
+
 end
 
 %%

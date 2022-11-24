@@ -1,8 +1,8 @@
 % Map the B0 and Bz
-function [Bzmapped] = B0Bzmap(B0Map, BzMap, Bzin)
+function [Bzmapped] = B0Bzmap(B0params, Bzparams, Bzin)
 %     Bz information
     [xBz,yBz,zBz,Shimch]=size(Bzin);
-    Bzinfo = BzMap.Parameters.info.img;
+    Bzinfo = Bzparams.info.img;
     Bzvoxel = repmat(Bzinfo.voxel_size,3,1);
     % generate Bz coordinate
     rotation_Bz = rotation_matrix(Bzinfo.dSag,Bzinfo.dCor,Bzinfo.dTra,Bzinfo.dRot);
@@ -22,13 +22,14 @@ function [Bzmapped] = B0Bzmap(B0Map, BzMap, Bzin)
     Bz_wordc3D(3,:,:,:)=permute(reshape(Bz_wordc(3,:),[yBz xBz zBz]),[2 1 3]);
 
 %     B0 information
-    B0info = B0Map.Parameters.info.img;
+    B0info = B0params;
     voxel = [B0info.img.voxel_size(1) B0info.img.voxel_size(2) B0info.img.voxel_size(3)];
     voxel = repmat(voxel,3,1);
     rotation_img = rotation_matrix(B0info.img.dSag,B0info.img.dCor,B0info.img.dTra,B0info.img.dRot);
     center_img = [B0info.img.dSag_center B0info.img.dCor_center B0info.img.dTra_center];
     temp_affine = [[rotation_img.*voxel center_img'];[0 0 0 1]];
     % corner = temp_affine*[-info.img.arraysize(1)/2 info.img.arraysize(2)/2 -info.img.arraysize(3)/2 1]';
+    x = B0info.img.matrix_size(1); y = B0info.img.matrix_size(2); z = B0info.img.matrix_size(3);
     corner = temp_affine*[-x/2 y/2 z/2 1]';
     
     % get the img affine matrix
@@ -93,40 +94,6 @@ function rotationMatrix = rotation_matrix(dsag,dcor,dtra,dRot)
     
 end
 
-
-% decide whether the point is in a volume
-function result = in_shimbox(x,y,x0,y0,z0,vertex0,vertex1,vertex2,vertex3)
-    % x is point to judge
-    % y is center point
-    % x0 is dis from center along x
-    % y0 is dis from center along y
-    % z0 is dis from center along z
-    
-    normX = cross(vertex1-vertex0,vertex2-vertex0);
-    normZ = cross(vertex1-vertex0,vertex3-vertex0);
-    normY = cross(vertex2-vertex0,vertex3-vertex0);
-    normX1 = norm(normX);
-    normY1 = norm(normY);
-    normZ1 = norm(normZ);
-    % for fast calculation
-    normX = repmat(normX,1,size(x,2));
-    normY = repmat(normY,1,size(x,2));
-    normZ = repmat(normZ,1,size(x,2));
-    y = repmat(y,1,size(x,2));
-    
-    lenX = abs(dot(x-y,normX)/norm(normX1));
-    lenY = abs(dot(x-y,normY)/norm(normY1));
-    lenZ = abs(dot(x-y,normZ)/norm(normZ1));
-    
-    x0 = repmat(x0,1,size(x,2));
-    y0 = repmat(y0,1,size(x,2));
-    z0 = repmat(z0,1,size(x,2));
-    
-    resultx = (lenX <= x0);
-    resulty = (lenY <= y0);
-    resultz = (lenZ <= z0);
-    result = resultx & resulty & resultz;
-end
 
 % get the necessary info from the twix_obj
 function info = get_info(twix_in)
