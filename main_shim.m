@@ -10,10 +10,13 @@ addpath(genpath('tools'))
 addpath('tool');
 fask_impl = 1;
 if (fask_impl)
-    freqpath = uigetfile('.nii', 'Select the frequency map');
-    Bzpath = uigetfile('.nii', 'Select the Bz map');
-    maskpath = uigetfile('.nii', 'Select the predicted segmentation mask');
-    resultpath = uigetdir('', 'Select the Output Folder')
+    [file, path] = uigetfile('.nii', 'Select the frequency map');
+    freqpath = fullfile(path, file);
+    [file, path] = uigetfile('.nii', 'Select the Bz map');
+    Bzpath = fullfile(path, file);
+    [file, path] = uigetfile('.nii', 'Select the predicted segmentation mask');
+    maskpath = fullfile(path, file);
+    resultpath = uigetdir('', 'Select the Output Folder');
     if (isequal(resultpath,0))
         error('User selected Cancel');
     end

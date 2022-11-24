@@ -1,9 +1,9 @@
 # Dynamic Shim Pipeline
 
 ## Pipeline
-1. Run the `main_preprocess.m` with B0path, Bzpath and resultpath as input arguments.
-2. Run the `./segmentation.sh` for nnUNet pipeline.
-3. Run the `main_shim.m` with B0path, Bzpath, resultpath for shimming. The output is the coil current.
+1. Move to the project root folder in matlab and run the `main_preprocess.m` with B0path, Bzpath and resultpath as input arguments.
+2. Open the `WSL` command line tool in Windows, activate the env using `conda active shim`. Run the `./segmentation.sh` for nnUNet pipeline.
+1. Move to the project root folder in matlab and run the `main_shim.m` with B0path, Bzpath, resultpath for shimming. The output is the coil current.
    
 ## Details
 ### Matlab

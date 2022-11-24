@@ -9,10 +9,12 @@ addpath(genpath('tools'))
 
 %% STEP 1 - Load the data
 addpath('tool');
-fask_impl = 0;
+fask_impl = 1;
 if (fask_impl)
-    B0path = uigetfile('*.mat','Select the Input B0 Data');
-    Bzpath = uigetfile('*.mat','Select the Input Bz Data');
+    [file,path] = uigetfile('*.mat','Select the Input B0 Data');
+    B0path = fullfile(path, file);
+    [file,path] = uigetfile('*.mat','Select the Input Bz Data');
+    Bzpath = fullfile(path, file);
     resultpath = uigetdir('','Select the Output Folder');
     if (isequal(resultpath,0)||isequal(Bzpath,0))
         error('User selected Cancel');
