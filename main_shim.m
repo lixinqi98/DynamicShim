@@ -8,17 +8,28 @@
 addpath(genpath('tools'))
 %% STEP 1 - Load the data
 addpath('tool');
-fask_impl = 0;
+fask_impl = 1;
 if (fask_impl)
-    rootpath = uigetdir('','Select the Output Folder');
+    freqpath = uigetfile('.nii', 'Select the frequency map');
+    Bzpath = uigetfile('.nii', 'Select the Bz map');
+    maskpath = uigetfile('.nii', 'Select the predicted segmentation mask');
+    resultpath = uigetdir('', 'Select the Output Folder')
     if (isequal(resultpath,0))
         error('User selected Cancel');
     end
 else
-    rootpath = 'data';
+    resultpath = 'data';
 end
+
 
 % 
 %% STEP 2 - Calculate the shim current
-order = 2;
 DC_limit = 10;
+
+idx = size(strsplit(freqpath, '/'), 2);
+split = strsplit(freqpath, '/');
+subjectid = split{1, idx}(1:end-8);
+fprintf("%12s| Processing the subject %s ...\n", datetime, subjectid);
+
+coilDC = dynamicshim(subjectid, DC_limit, freqpath, Bzpath, maskpath, resultpath);
+save(fullfile(resultpath, 'coilDC.mat'), coilDC);
