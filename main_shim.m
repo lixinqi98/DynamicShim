@@ -1,18 +1,19 @@
 % main_shim.m
 % Dynamic shimming pipeline for one subject.
-% B0path: path to the B0 mat
-% Bzpath: path to the Bz mat
-% resultpath: path to the result folder
-% Created. Mov 16 2022
+% freqpath: path to the B0 frequency map in Nifti
+% Bzpath: path to the Bz map in mat file
+% maskpath: path to the predicted segmentation mask in Nifti
+% resultpath: path to the result folder, saving the coil currents.
 
-addpath(genpath('tools'))
+% Mona. Nov 16 2022
+
 %% STEP 1 - Load the data
-addpath('tool');
+addpath(genpath('tools'))
 fask_impl = 1;
 if (fask_impl)
     [file, path] = uigetfile('.nii', 'Select the frequency map');
     freqpath = fullfile(path, file);
-    [file, path] = uigetfile('.nii', 'Select the Bz map');
+    [file, path] = uigetfile('.mat', 'Select the Bz map');
     Bzpath = fullfile(path, file);
     [file, path] = uigetfile('.nii', 'Select the predicted segmentation mask');
     maskpath = fullfile(path, file);
@@ -25,7 +26,6 @@ else
 end
 
 
-% 
 %% STEP 2 - Calculate the shim current
 DC_limit = 10;
 

@@ -1,14 +1,17 @@
 % main_preprocess.m
 % Dynamic shimming pipeline(Part I) for one subject.
-% datapath: path to the B0 mat
-% resultpath: path to the result folder
+% B0path: path to the B0 mat
+% Bzpath: path to the Bz mat
+% resultpath: path to the result folder. Frequency map is saved in ${resultpath}/freq, 
+% ${resultpath}/mag and ${resultpath}/mask as nifti files. 
+% Corresponding Bz map will be saved in ${resultpath}/Bz as mat file.
 
-% Created. Mov 16 2022
-clear all
-addpath(genpath('tools'))
+% Mona. Nov 16 2022
 
 %% STEP 1 - Load the data
-addpath('tool');
+% clear all
+
+addpath(genpath('tools'))
 fask_impl = 1;
 if (fask_impl)
     [file,path] = uigetfile('*.mat','Select the Input B0 Data');
@@ -20,8 +23,8 @@ if (fask_impl)
         error('User selected Cancel');
     end
 else
-    B0path = 'data/raw_B0/UNIC_B0Map_Cardiac_BOLD05242022_meas_MID00072_FID07320_Fieldmap_Cardiac_insp_inphae_3D_GRE2echo.dat.mat';
-    Bzpath = 'data/raw_Bz/Bzmap_QG_060222_5m1_SH_resolutionmatched.mat';
+    B0path = 'data\raw_B0\UNIC_B0Map_Cardiac_BOLD05242022_meas_MID00072_FID07320_Fieldmap_Cardiac_insp_inphae_3D_GRE2echo.dat.mat';
+    Bzpath = 'data\raw_Bz\Bzmap_QG_060222_5m1_SH_resolutionmatched.mat';
     resultpath = 'data';
 end
 
@@ -53,5 +56,8 @@ split = strsplit(B0path, '\');
 subjectid = split{1, idx}(1:end-8);
 fprintf("%12s| Processing the subject %s ...\n", datetime, subjectid);
 
-% Frequency map, magnitude map and mask will be saved in ${output_folder}/freq, ${output_folder}/mag and ${output_folder}/mask.
+% Frequency map, magnitude map and mask will be saved in
+% ${resultpath}/freq, ${resultpath}/mag and ${resultpath}/mask as nifti
+% files. Corresponding Bz map will be saved in ${resultpath}/Bz as mat
+% file.
 B0Bzpreprocess(B0, Bz, resultpath, subjectid);
