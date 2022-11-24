@@ -48,8 +48,8 @@ B0 = B0Map.UNIC_B0Map;
 
 
 %% STEP 2 - Prepare data for segmentation
-idx = size(strsplit(B0path, '/'), 2);
-split = strsplit(B0path, '/');
+idx = size(strsplit(B0path, '\'), 2);
+split = strsplit(B0path, '\');
 subjectid = split{1, idx}(1:end-8);
 fprintf("%12s| Processing the subject %s ...\n", datetime, subjectid);
 

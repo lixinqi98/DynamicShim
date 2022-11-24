@@ -10,7 +10,7 @@ function [DC] = solveDC(B0, Bzf, seg, DC_limit)
 
     B0f_seg = double(B0(seg)); 
     Bzf_seg = Bzf(seg(:),:);
-    [~,nc] = size(Bzf_temp);
+    [~,nc] = size(Bzf);
     lb0 = -ones(nc,1)*DC_limit;  %lower bound  dc limit
     ub0 = ones(nc,1)*DC_limit;   % upper bound dc limit 
     X0 = zeros(nc,1);                 % initial value, 0

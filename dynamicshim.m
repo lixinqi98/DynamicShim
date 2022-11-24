@@ -3,7 +3,7 @@
 % Assumption: frequency(resampled) fields in ${root}/freq_resample. Segmentation mask in ${root}/label_pred_resample. 
 % Mona, Nov 15 2022
 % 
-function DC = dynamicshim(subject, DC_limit, freqpath, Bzpath, maskpath, root)
+function DC = dynamicshim(DC_limit, freqpath, Bzpath, maskpath)
     warning('off','all')
 
     % Shimming
@@ -16,6 +16,9 @@ function DC = dynamicshim(subject, DC_limit, freqpath, Bzpath, maskpath, root)
 %     Load the Bz map
     bz = load(Bzpath, 'Bz_mapped');
     Bz_mapped = bz.Bz_mapped;
+    disp(size(freq))
+    disp(size(seg))
+    disp(size(Bz_mapped))
 
     for jr=1:size(Bz_mapped,4)
         Bz_ROI = Bz_mapped(:,:,:,jr);

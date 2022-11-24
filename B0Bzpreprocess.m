@@ -55,7 +55,7 @@ function [] = B0Bzpreprocess(B0, Bz, output_folder, subjectid)
     mag_path = fullfile(output_folder, 'mag', [subjectid, '.nii']);
     freq_path = fullfile(output_folder, 'freq', [subjectid, '.nii']);
     mask_path = fullfile(output_folder, 'mask', [subjectid, '.nii']);
-    bz_path = fullfile(output_folder, 'Bz', [subjectid, '.nii']);
+    bz_path = fullfile(output_folder, 'Bz', [subjectid, '.mat']);
     
     mat2Nifti(freq_clean, freq_path, voxelSize);
     mat2Nifti(mag_clean, mag_path, voxelSize);

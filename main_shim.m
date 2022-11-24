@@ -29,10 +29,13 @@ end
 %% STEP 2 - Calculate the shim current
 DC_limit = 10;
 
-idx = size(strsplit(freqpath, '/'), 2);
-split = strsplit(freqpath, '/');
+idx = size(strsplit(B0path, '\'), 2);
+split = strsplit(B0path, '\');
 subjectid = split{1, idx}(1:end-8);
 fprintf("%12s| Processing the subject %s ...\n", datetime, subjectid);
 
-coilDC = dynamicshim(subjectid, DC_limit, freqpath, Bzpath, maskpath, resultpath);
-save(fullfile(resultpath, 'coilDC.mat'), coilDC);
+coilDC = dynamicshim(DC_limit, freqpath, Bzpath, maskpath);
+if ~exist(fullfile(resultpath, 'coilDC'), 'dir')
+    mkdir(fullfile(resultpath, 'coilDC'))
+end
+save(fullfile(resultpath, 'coilDC', [subjectid,'_coilDC.mat']), 'coilDC');
