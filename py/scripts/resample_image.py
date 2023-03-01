@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     os.makedirs(args.output_dir, exist_ok=True)
     if args.resolution == None:
-        tmpfiles = glob.glob("data/freq/*.nii")
+        tmpfiles = glob.glob("data/freq/*.nii.gz")
         template = sitk.ReadImage(tmpfiles[0])
         resolution = template.GetSpacing()
         direction = template.GetDirection()
