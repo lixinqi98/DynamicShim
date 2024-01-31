@@ -42,7 +42,7 @@ This implementation is based on this paper:
 1. Preprocess the data
 
 ```bash
-# (optional) back to the root folder, the DynamicShimWorkStation folder
+# (optional) back to the root folder
 cd ..
 
 python preprocess.py 
