@@ -52,3 +52,5 @@ python preprocess.py
 ```bash
 nnUNetv2_predict -i ..\data\2modalities -o ..\data\segmentation_output -d 301 -c 3d_fullres --save_probabilities -chk checkpoint_best.pth -device cpu
 ```
+
+The pre-trained model can be found [here](https://drive.google.com/drive/folders/12DdKLqE21Omwh17B8oSIPlmyoPcdrYVf?usp=sharing)
