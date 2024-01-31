@@ -1,6 +1,6 @@
 # Dual-Channel Segmentation Model for Dynamic Shim
 
-
+Implementation of paper "**Reliable Off-Resonance Correction in High-Field Cardiac MRI Using Autonomous Cardiac B_0 Segmentation with Dual-Modality Deep Neural Networks**"
 
 ## Getting started
 
