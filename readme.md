@@ -1,6 +1,6 @@
 # Dual-Channel Segmentation Model for Dynamic Shim
 
-
+Implementation of paper "**Reliable Off-Resonance Correction in High-Field Cardiac MRI Using Autonomous Cardiac B_0 Segmentation with Dual-Modality Deep Neural Networks**"
 
 ## Getting started
 
@@ -42,7 +42,7 @@ This implementation is based on this paper:
 1. Preprocess the data
 
 ```bash
-# (optional) back to the root folder, the DynamicShimWorkStation folder
+# (optional) back to the root folder
 cd ..
 
 python preprocess.py 
