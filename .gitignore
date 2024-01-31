@@ -1,6 +1,6 @@
 **/.DS_Store
-data
-py/nnUNet.egg_info
+nnUNet_data
+nnUNet/nnunetv2.egg_info
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
