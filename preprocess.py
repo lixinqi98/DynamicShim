@@ -14,19 +14,17 @@ from natsort import natsorted
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mags', type=str, default='data/mag', help='path to magnitude directory, only support .nii.gz')
-    parser.add_argument('--phases', type=str, default='data/phase', help='path to frequency directory, only support .nii.gz')
-    parser.add_argument('--masks', type=str, default='data/mask', help='path to mask directory, only support .nii.gz')
-    parser.add_argument('--out', type=str, default='data/2modalities', help='path to output directory')
-    parser.add_argument('--resolution', default=(3.57, 3.57, 5.78), help='aim resolution')
+    parser.add_argument('--input', type=str, default='data', help='path to input directory')
+    parser.add_argument('--output', type=str, default='data/2modalities', help='path to output directory')
+    parser.add_argument('--resolution', default=(3.57, 3.57, 5.2), help='aim resolution')
 
     args = parser.parse_args()
 
-    list_mag = natsorted(glob.glob(f"{args.mags}/*.nii.gz"))
-    list_phase = natsorted(glob.glob(f"{args.phases}/*.nii.gz"))
-    list_mask = natsorted(glob.glob(f"{args.masks}/*.nii.gz"))
+    list_mag = natsorted(glob.glob(f"{args.input}/*_0000.nii"))
+    list_phase = natsorted(glob.glob(f"{args.input}/*_0001.nii"))
+    list_mask = natsorted(glob.glob(f"{args.input}/*mask.nii"))
 
-    os.makedirs(args.out, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
     assert len(list_mag) == len(list_phase), f'Number of files in each directory must be the same, mag {len(list_mag)} and phase {len(list_phase)}'
     print(f"Number of subjects: {len(list_mag)}")
 
@@ -37,8 +35,9 @@ if __name__ == "__main__":
                 phase=tio.ScalarImage(list_phase[i])
             )
             transform = tio.Compose([
-                tio.ToCanonical(),
-                tio.Resample(args.resolution, image_interpolation='bspline', label_interpolation='nearest'),
+                # tio.ToCanonical(),
+                tio.Resample('mag', image_interpolation='bspline'),
+                # tio.Resample(args.resolution, image_interpolation='bspline'),
                 # tio.Mask(masking_method='mask')
             ])
         else:
@@ -49,7 +48,8 @@ if __name__ == "__main__":
             )
             transform = tio.Compose([
                 tio.ToCanonical(),
-                tio.Resample(args.resolution, image_interpolation='bspline', label_interpolation='nearest'),
+                tio.Resample('mag', image_interpolation='bspline', label_interpolation='nearest'),
+                # tio.Resample(args.resolution, image_interpolation='bspline', label_interpolation='nearest'),
                 tio.Mask(masking_method='mask')
             ])
 
@@ -59,12 +59,12 @@ if __name__ == "__main__":
         # save the magnitude and phase map in output folder
         name = os.path.basename(list_mag[i]).split('.')[0]
         if '0000' in name:
-            transformed.mag.save(f"{args.out}/{name}.nii.gz")
+            transformed.mag.save(f"{args.output}/{name}.nii.gz")
         else:
-            transformed.mag.save(f"{args.out}/{name}_0000.nii.gz")
+            transformed.mag.save(f"{args.output}/{name}_0000.nii.gz")
         
         name = os.path.basename(list_phase[i]).split('.')[0]
         if '0001' in name:
-            transformed.phase.save(f"{args.out}/{name}.nii.gz")
+            transformed.phase.save(f"{args.output}/{name}.nii.gz")
         else:
-            transformed.phase.save(f"{args.out}/{name}_0001.nii.gz")
+            transformed.phase.save(f"{args.output}/{name}_0001.nii.gz")

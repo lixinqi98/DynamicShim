@@ -18,17 +18,18 @@ import os
 PLEASE READ paths.md FOR INFORMATION TO HOW TO SET THIS UP
 """
 
-nnUNet_raw = os.environ.get('nnUNet_raw')
-nnUNet_preprocessed = os.environ.get('nnUNet_preprocessed')
-nnUNet_results = os.environ.get('nnUNet_results')
-
-# or set your own path here
-# os.environ['nnUNet_raw'] = r'your own path'
-# os.environ['nnUNet_preprocessed'] =  r'your own path'
-# os.environ['nnUNet_results'] =  r'your own path'
 # nnUNet_raw = os.environ.get('nnUNet_raw')
 # nnUNet_preprocessed = os.environ.get('nnUNet_preprocessed')
 # nnUNet_results = os.environ.get('nnUNet_results')
+
+# or set your own path here
+base = r'/Users/mona/Library/CloudStorage/Dropbox/0.MAC-SYNC/0.PROJECT/DeeplearningSegmentation/public-code/DynamicShim/nnUNet_data'
+os.environ['nnUNet_raw'] = f'{base}/nnUNet_raw_data_base'
+os.environ['nnUNet_preprocessed'] =  f'{base}/nnUNet_preprocessed'
+os.environ['nnUNet_results'] =  f'{base}/nnUNet_trained_models'
+nnUNet_raw = os.environ.get('nnUNet_raw')
+nnUNet_preprocessed = os.environ.get('nnUNet_preprocessed')
+nnUNet_results = os.environ.get('nnUNet_results')
 
 if nnUNet_raw is None:
     print("nnUNet_raw is not defined and nnU-Net can only be used on data for which preprocessed files "
