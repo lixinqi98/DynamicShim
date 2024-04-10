@@ -146,6 +146,7 @@ class nnUNetTrainer(object):
         self.num_iterations_per_epoch = 250
         self.num_val_iterations_per_epoch = 50
         self.num_epochs = 1000
+        print("Mona: num_epochs ----- ", self.num_epochs)
         self.current_epoch = 0
 
         ### Dealing with labels/regions

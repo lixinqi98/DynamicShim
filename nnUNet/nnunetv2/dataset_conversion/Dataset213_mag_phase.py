@@ -3,8 +3,8 @@ from batchgenerators.utilities.file_and_folder_operations import *
 from nnunetv2.dataset_conversion.generate_dataset_json import generate_dataset_json
 from nnunetv2.paths import nnUNet_raw
 
-from monai.transforms import RandScaleCrop
-import torchio as tio
+# from monai.transforms import RandScaleCrop
+# import torchio as tio
 import shutil
 import re
 from pathlib import Path
@@ -16,11 +16,11 @@ if __name__ == '__main__':
     """
 
     # base = '/home/mona/data'
-    base = '/Users/mona/Documents/projects/segmentation/data'
+    base = '/Users/mona/Library/CloudStorage/Dropbox/0.MAC-SYNC/0.PROJECT/DeeplearningSegmentation/public-code/DynamicShim/data'
     # this folder should have the training and testing subfolders
 
     # now start the conversion to nnU-Net:
-    nnunet_dataset_id = 301
+    nnunet_dataset_id = 401
     # task_name = 'paper_mag_phase'
     task_name = 'CardiacFinetune'
     foldname = "Dataset%03.0d_%s" % (nnunet_dataset_id, task_name)
@@ -74,36 +74,36 @@ if __name__ == '__main__':
         shutil.copy(input_phase_file, output_phase_file)
         shutil.copy(input_segmentation_file, output_seg_file)
 
-        subject = tio.Subject(
-            mag=tio.ScalarImage(input_mag_file),
-            phase=tio.ScalarImage(input_phase_file),
-            seg=tio.LabelMap(input_segmentation_file)
-        )
-        original_shape = subject.mag.shape
-        original_spacing = subject.mag.spacing
-        print(original_shape)
-        # print()
-        transforms = tio.Compose([
-            tio.ZNormalization(masking_method=lambda x: x > 0),
-            tio.ToCanonical(),
-            # tio.ZNormalization(masking_method=lambda x: x > 0),
-            tio.CropOrPad(target_shape=(96, 96, original_shape[-1])),
-            tio.Resample((original_spacing[0]*0.5, original_spacing[1]*0.5, original_spacing[2]), image_interpolation='bspline', label_interpolation='nearest'),
+        # subject = tio.Subject(
+        #     mag=tio.ScalarImage(input_mag_file),
+        #     phase=tio.ScalarImage(input_phase_file),
+        #     seg=tio.LabelMap(input_segmentation_file)
+        # )
+        # original_shape = subject.mag.shape
+        # original_spacing = subject.mag.spacing
+        # print(original_shape)
+        # # print()
+        # transforms = tio.Compose([
+        #     tio.ZNormalization(masking_method=lambda x: x > 0),
+        #     tio.ToCanonical(),
+        #     # tio.ZNormalization(masking_method=lambda x: x > 0),
+        #     tio.CropOrPad(target_shape=(96, 96, original_shape[-1])),
+        #     tio.Resample((original_spacing[0]*0.5, original_spacing[1]*0.5, original_spacing[2]), image_interpolation='bspline', label_interpolation='nearest'),
 
-        ]   
-        )
-        transformed = transforms(subject)
-        unique_name = unique_name + '_resampleSpatialScaleCrop'
-        output_mag_file = join(target_imagesTr, unique_name + '_0000.nii.gz') 
-        output_phase_file = join(target_imagesTr, unique_name + '_0001.nii.gz')
-        output_seg_file = join(target_labelsTr, unique_name + ".nii.gz")
-        transformed.mag.save(output_mag_file)
-        transformed.phase.save(output_phase_file)
-        transformed.seg.save(output_seg_file)
+        # ]   
+        # )
+        # transformed = transforms(subject)
+        # unique_name = unique_name + '_resampleSpatialScaleCrop'
+        # output_mag_file = join(target_imagesTr, unique_name + '_0000.nii.gz') 
+        # output_phase_file = join(target_imagesTr, unique_name + '_0001.nii.gz')
+        # output_seg_file = join(target_labelsTr, unique_name + ".nii.gz")
+        # transformed.mag.save(output_mag_file)
+        # transformed.phase.save(output_phase_file)
+        # transformed.seg.save(output_seg_file)
     
     # finally we can call the utility for generating a dataset.json
     generate_dataset_json(output_folder=target_base, 
                           channel_names={'magnitude': 0, 'phase': 1},
                           labels={'background': 0, 'heart': 1},
-                          num_training_cases=len(images_mag)*2, file_ending='.nii.gz',
+                          num_training_cases=len(images_mag), file_ending='.nii.gz',
                           dataset_name=task_name, license='Mona')

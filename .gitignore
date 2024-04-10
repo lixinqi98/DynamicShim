@@ -1,6 +1,7 @@
 **/.DS_Store
+data/
 matlab/tools
-nnUNet_data
+nnUNet_data/
 nnUNet/nnunetv2.egg_info
 # Byte-compiled / optimized / DLL files
 __pycache__/
