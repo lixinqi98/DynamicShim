@@ -79,12 +79,12 @@ AllPhasemap.RoFOV=twix_obj.hdr.Config.RoFOV;%mm
 AllPhasemap.PeFOV=twix_obj.hdr.Config.PeFOV;%mm
 AllPhasemap.SlFOV=twix_obj.hdr.MeasYaps.sSliceArray.asSlice{1}.dThickness;
 [NumRO, NumPE, NumSlices, NumCh, NumEchos] = size(AllPhasemap.compleximg);
-if (twix_obj.hdr.Dicom.flSliceOS>0)
-    NumSlices=NumSlices/twix_obj.hdr.Dicom.flSliceOS;
-end
-if (twix_obj.hdr.Dicom.flPhaseOS>0)
-    NumPE=NumPE/twix_obj.hdr.Dicom.flPhaseOS;
-end
+% if (twix_obj.hdr.Dicom.flSliceOS>0)
+%     NumSlices=NumSlices/twix_obj.hdr.Dicom.flSliceOS;
+% end
+% if (twix_obj.hdr.Dicom.flPhaseOS>0)
+%     NumPE=NumPE/twix_obj.hdr.Dicom.flPhaseOS;
+% end
 if (twix_obj.hdr.Dicom.flReadoutOSFactor>0)
     NumRO=NumRO/twix_obj.hdr.Dicom.flReadoutOSFactor;
 end
@@ -137,7 +137,7 @@ input_2 = fullfile(B0path, [B0file(1:end-4), '_seg_preprocess']);
 input_3 = fullfile(B0path, [B0file(1:end-4), '_seg_results']);
 mkdir(input_2)
 mkdir(input_3)
-cmdStr = [pathToScript ' ' input_1 ' ' input_2 ' ' input_3 ' ' voxel_size]
+cmdStr = [pathToScript ' ' input_1 ' ' input_2 ' ' input_3 ' ' num2str(round(voxel_size, 2)) ' ' num2str(round(size(iMag), 2))]
 system(cmdStr)
 %% Run the following command in powershell!!!
 

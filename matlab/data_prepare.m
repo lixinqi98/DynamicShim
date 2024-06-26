@@ -127,19 +127,19 @@ function info = get_img_info(twix_in)
     end
     
     if isfield(img_info,'sPosition')
-        if isfield(img_info.sNormal,'dTra')
+        if isfield(img_info.sPosition,'dTra')
             info.img.dTra_center = img_info.sPosition.dTra;
         else
             info.img.dTra_center = 0;
         end
 
-        if isfield(img_info.sNormal,'dSag')
+        if isfield(img_info.sPosition,'dSag')
             info.img.dSag_center = img_info.sPosition.dSag;
         else
             info.img.dSag_center = 0;
         end
 
-        if isfield(img_info.sNormal,'dCor')
+        if isfield(img_info.sPosition,'dCor')
             info.img.dCor_center = img_info.sPosition.dCor;
         else
             info.img.dCor_center = 0;

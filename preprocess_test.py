@@ -20,7 +20,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default='/Users/mona/Library/CloudStorage/Dropbox/0.MAC-SYNC/0.PROJECT/DeeplearningSegmentation/data/Train_nii', help='path to input directory')
     parser.add_argument('--output', type=str, default='data/2modalities', help='path to output directory')
-    parser.add_argument('--resolution', default=(3.57, 3.57, 5), help='aim resolution')
+    parser.add_argument('--resolution', nargs='+', type=float, default=(3.57, 3.57, 5), help='aim resolution')
+    parser.add_argument('--target_size', nargs='+', type=int, default=(224, 96, 40), help='aim resolution')
 
     args = parser.parse_args()
 
@@ -31,6 +32,9 @@ if __name__ == "__main__":
     assert len(list_mag) == len(list_phase), f'Number of files in each directory must be the same, mag {len(list_mag)} and phase {len(list_phase)}'
     print(f"Number of subjects: {len(list_mag)}")
 
+    resolution = tuple(args.resolution)
+    target_size = tuple(args.target_size)
+    print(resolution, target_size)
 
     for i in range(len(list_mag)):
         subject = tio.Subject(
@@ -40,7 +44,7 @@ if __name__ == "__main__":
         
         transform = tio.Compose([
             tio.ToCanonical(),
-            tio.Resample(target=args.resolution, image_interpolation='bspline'),
+            tio.Resample(target=resolution, image_interpolation='bspline'),
         ])
         subject = transform(subject)
         target_affine = np.diag(subject.mag.spacing + (1,))
@@ -55,30 +59,13 @@ if __name__ == "__main__":
 
         # transformed
 
-        mag_masking = tio.LabelMap(tensor=transformed.mag.data > 1e-2)
-        mask_map = torch.zeros(transformed.mag.data.shape, dtype=torch.uint8)
-        FOV = 82 // 2
-        image_size = transformed.mag.data.shape
-        mask_size = (1, FOV, FOV, image_size[-1])  # Desired mask size
-        mask_data = torch.ones(mask_size)
-
-        # Step 2: Calculate the center offsets
-        offsets = [(image_dim - mask_dim) // 2 for image_dim, mask_dim in zip(image_size, mask_size)]
-
-        # Step 3: Create a blank image of the original size filled with zeros
-        full_mask_data = torch.zeros(image_size)
-
-        # Place the mask at the center of the larger image
-        full_mask_data[:, 
-            offsets[1]:offsets[1] + mask_size[1],
-            offsets[2]:offsets[2] + mask_size[2],
-            offsets[3]:offsets[3] + mask_size[3],
-        ] = mask_data
+        mag_masking = tio.LabelMap(tensor=transformed.mag.data > 1e-2, affine=transformed.mag.affine)
 
         transformed.add_image(mag_masking, image_name='mask')
 
         masked_subject = tio.transforms.Mask(masking_method='mask')(transformed)
 
+        masked_subject = tio.CropOrPad(target_size)(masked_subject)
         # save the magnitude and phase map in output folder
         name = os.path.basename(list_mag[i]).split('.')[0]
         if '0000' in name:

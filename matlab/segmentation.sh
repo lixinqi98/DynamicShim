@@ -9,16 +9,20 @@
 input=$1
 output_1=$2
 output_2=$3
+resolution1=$4
+resolution2=$5
+resolution3=$6
 
 cd ..
 echo $pwd
+conda init
 conda activate dynamicShim
 echo "Segmentation of ${input} started"
 
-python preprocess_test.py --input ${input} --output ${output_1}
+python preprocess_test.py --input ${input} --output ${output_1} --resolution ${resolution1} ${resolution2} ${resolution3}
 
 echo "Preprocess finished, saved in ${output_1}"
-nnUNetv2_predict -i ${output_1} -o ${output_2} -d 401 -c 3d_fullres --save_probabilities -chk checkpoint_bestp.pth -device cpu --verbose
+nnUNetv2_predict -i ${output_1} -o ${output_2} -d 401 -c 3d_fullres --save_probabilities -device cpu --verbose
 
 echo "Segmentation finished, saved in ${output_2}"
 python saveNii2Mat.py --niiPath ${output_2} --matPath ${output_2}

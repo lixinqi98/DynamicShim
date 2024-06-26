@@ -17,7 +17,14 @@ import os
 """
 PLEASE READ paths.md FOR INFORMATION TO HOW TO SET THIS UP
 """
-
+# or set your own path here
+pwd = os.getcwd()
+base = os.path.join(pwd, 'nnUNet_data')
+# base = r'/Users/mona/Library/CloudStorage/Dropbox/0.MAC-SYNC/0.PROJECT/DeeplearningSegmentation/public-code/DynamicShim/nnUNet_data'
+# base = r'C:\Users\xinli\Dropbox\0.MAC-SYNC\0.PROJECT\DeeplearningSegmentation\public-code\DynamicShim\nnUNet_data'
+os.environ['nnUNet_raw'] = os.path.join(base, 'nnUNet_raw_data_base')
+os.environ['nnUNet_preprocessed'] =  os.path.join(base,'nnUNet_preprocessed')
+os.environ['nnUNet_results'] =  os.path.join(base, 'nnUNet_trained_models')
 nnUNet_raw = os.environ.get('nnUNet_raw')
 nnUNet_preprocessed = os.environ.get('nnUNet_preprocessed')
 nnUNet_results = os.environ.get('nnUNet_results')
